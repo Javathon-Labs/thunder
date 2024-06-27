@@ -3,7 +3,7 @@ module.exports = {
     description: `Get information on a user.`,
     usage: ``,
     async execute(message, args, client) {
-        console.log(message.member)
+
         const embed = {
             "title": `${message.member.username} [\`${message.member.id}\`]`,
             "thumbnail": {
