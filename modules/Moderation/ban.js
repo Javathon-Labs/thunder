@@ -3,7 +3,7 @@ module.exports = {
   description: 'Ban a user from the server.',
   usage: '!ban @user [reason]',
   async execute(message, args, client) {
-    console.log(message);
+    console.log(message.member);
 
     // Check if the user has the necessary permissions
     const permissionCheck = await message.member.getPermission();
@@ -12,9 +12,6 @@ module.exports = {
         "title": `Oh no!`,
         "description": `To use this command, the \`CanKickMembers\` permission is required.`,
         "color": 0xFF3131,
-        "footer": {
-          "text": "Please try again with the correct permissions."
-        },
       }
       await message.createMessage({ embeds: [embed] });
       return;
@@ -25,27 +22,25 @@ module.exports = {
     if (!user) {
       const embed = {
         "title": `False Command Usage!`,
-        "description": `To execute this command, a **user** must be mentioned.`,
+        "description": `To continue with this command, a **user** must be mentioned.`,
         "color": 0xFF3131,
         "footer": {
           "text": "Please try again."
         },
       }
-      await message.createMessage({ embeds: [embed] });
+      await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
       return;
     }
 
-    // Get the reason for the ban
-    const reason = args.slice(1).join(' ') || 'No reason provided';
 
     try {
       // Ban the user
-      await message.guild.createBan(user, reason);
+      await message.guild.createBan(guildID, user);
 
       // Send a message to the channel
       const embed = {
         "title": `Success!`,
-        "description": `<@${user}> has been banned!`,
+        "description": `<@${user}> has been banned! `,
         "color": 0x39FF14,
       }
       await message.createMessage({ embeds: [embed] });
