@@ -13,7 +13,7 @@ module.exports = {
                 "description": `To use this command, the \`CanKickMembers\` permission is required.`,
                 "color": 0xFF3131,
             }
-            await message.createMessage({ embeds: [embed] });
+            await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
             return;
         }
 
