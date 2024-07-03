@@ -9,9 +9,12 @@ module.exports = {
         const permissionCheck = await message.member.getPermission();
         if (!permissionCheck.includes('CanKickMembers') && !message.member.isOwner) {
             const embed = {
-                "title": `Oh no!`,
-                "description": `To use this command, the \`CanKickMembers\` permission is required.`,
-                "color": 0xFF3131,
+                title: `Error!`,
+                description: `To use this command, the \`CanKickMembers\` permission is required.`,
+                color: 0xFF3131,
+                footer: {
+                    text: "Please try again with the correct permissions.",
+                }
             }
             await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
             return;
@@ -21,7 +24,7 @@ module.exports = {
         const user = message?.mentions?.users[0].id;
         if (!user) {
             const embed = {
-                "title": `False Command Usage!`,
+                "title": `Error!`,
                 "description": `To continue with this command, a **user** must be mentioned.`,
                 "color": 0xFF3131,
                 "footer": {

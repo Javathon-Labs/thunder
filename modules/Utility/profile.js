@@ -6,7 +6,7 @@ module.exports = {
         console.log(client.guilds)
         const embed = {
             title: `<@${message.member.id}>`,
-            color: 0x36363d,
+            color: 0xEAD5FF,
             fields: [
                 {
                     name: "Account Details",
