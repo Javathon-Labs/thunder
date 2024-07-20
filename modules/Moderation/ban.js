@@ -1,21 +1,20 @@
 module.exports = {
   name: 'ban',
   description: 'Ban a user from the server.',
-  usage: '!ban @user [reason]',
+  usage: '.ban @user',
   async execute(message, args, client) {
-    console.log(message.member);
 
     // Check if the user has the necessary permissions
     const permissionCheck = await message.member.getPermission();
     if (!permissionCheck.includes('CanKickMembers') && !message.member.isOwner) {
       const embed = {
-        title: `Error!`,
-        description: `To use this command, the \`CanBanMembers\` permission is required.`,
+        title: `Missing Permissons!`,
+        description: `To use this command, You need the \`Kick/Ban Members\` permission!`,
         color: 0xFF3131,
         footer: {
-          text: "Please try again with the correct permissions."
+            text: "Please try again with the correct perms.",
         }
-      }
+    }
       await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
       return;
     }
@@ -25,12 +24,18 @@ module.exports = {
     if (!user) {
       const embed = {
         "title": `Error!`,
-        "description": `To continue with this command, a **user** must be mentioned.`,
-        "color": 0xff3131,
+        "description": `To execute with this command, a **user** must be mentioned.`,
+        "color": 0xFF3131,
+        fields: [
+            {
+                name: "Usage",
+                value: `\`\`\`.ban @username\`\`\``,
+            }
+        ],
         "footer": {
-          "text": "Please try again."
+            "text": "Please try again."
         },
-      }
+    }
       await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
       return;
     }
