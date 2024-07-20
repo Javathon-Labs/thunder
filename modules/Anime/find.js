@@ -37,10 +37,13 @@ module.exports = {
       if (data.data.length === 0) {
         const embed = {
           title: 'Error!',
-          description: `No ${searchType} found for \`${searchName}\`!`,
+          description: `No **${searchType}** found for \`${searchName}\`!`,
           color: 0xFF3131,
+          footer: {
+            "text": "Please try again."
+        },
         };
-        await message.createMessage({ embeds: [embed] });
+        await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
         return;
       }
 
