@@ -1,7 +1,7 @@
 {
     "token": "gapi_zxqhmuwNIrDSlc9YU0IipghcfbFl8gx5KJxEQ8u/G+QCwQ+ntV1BnDzSGqVmqlY0un3+USLvYG2YbVfEUlv79Q==",
     "anime_api_url": "https://api.jikan.moe/v4",
-    "prefix": ".",
+    "prefix": "=",
     "colors": {
         "red": "0xFF3131",
         "green": "0x39FF14"

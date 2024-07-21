@@ -9,7 +9,7 @@ module.exports = {
     if (args.length < 2 || (args[1] !== 'anime' && args[1] !== 'manga')) {
       const embed = {
         title: `Error!`,
-        description: `To execute this command, you must specify whether you're searching for an anime or manga, followed by the name.`,
+        description: `To execute this command, you must specify whether you're searching for an \`anime\` or \`manga\`, followed by the \`name\`.`,
         color: 0xFF3131,
         fields: [
           {
@@ -17,8 +17,11 @@ module.exports = {
             value: `\`\`\`.find [anime/manga] [name]\`\`\``,
           },
         ],
+        footer: {
+          text: "Please try again.",
+      }
       };
-      await message.createMessage({ embeds: [embed] });
+      await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
       return;
     }
 
@@ -82,7 +85,7 @@ module.exports = {
             value: `\`\`\`Type: ${type} \nStatus: ${status} \nRating: ${rating}\`\`\``,
           },
         ],
-        color: 0x3498DB,
+        color: 0xFFFFFF,
       };
 
       // Send the embed to the channel
