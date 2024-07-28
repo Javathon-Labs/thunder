@@ -3,7 +3,7 @@ const { anime_api_url } = require('../../config/config.json');
 module.exports = {
   name: 'find',
   description: 'Get information about an anime or manga.',
-  usage: '.find [anime/manga] <name>',
+  usage: '$find [anime/manga] <name>',
   async execute(message, args, client) {
     // Check if the user provided an anime or manga name
     if (args.length < 2 || (args[1] !== 'anime' && args[1] !== 'manga')) {
@@ -14,7 +14,7 @@ module.exports = {
         fields: [
           {
             name: "Usage",
-            value: `\`\`\`.find [anime/manga] [name]\`\`\``,
+            value: `\`\`\`$find [anime/manga] [name]\`\`\``,
           },
         ],
         footer: {
@@ -85,7 +85,6 @@ module.exports = {
             value: `\`\`\`Type: ${type} \nStatus: ${status} \nRating: ${rating}\`\`\``,
           },
         ],
-        color: 0xFFFFFF,
       };
 
       // Send the embed to the channel

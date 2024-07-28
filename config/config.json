@@ -1,7 +1,8 @@
 {
-    "token": "gapi_zxqhmuwNIrDSlc9YU0IipghcfbFl8gx5KJxEQ8u/G+QCwQ+ntV1BnDzSGqVmqlY0un3+USLvYG2YbVfEUlv79Q==",
+    "token": "gapi_xVxUUMYOJBPXGJ8D2UhD2pPPmNy9138bN5gPIUwAt6TWKeRl7qBB4KWsnv669XfaFA44u8VV5OkC4L0slj3H3w==",
     "anime_api_url": "https://api.jikan.moe/v4",
-    "prefix": "=",
+    "mongoURI": "mongodb+srv://weebjs:Summer8455@cluster0.ikzk44n.mongodb.net/?retryWrites=true&w=majority",
+    "prefix": "$",
     "colors": {
         "red": "0xFF3131",
         "green": "0x39FF14"
