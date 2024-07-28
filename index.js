@@ -9,9 +9,42 @@ const handlerFiles = fs.readdirSync('./handlers/').filter(file => file.endsWith(
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 const commandFolders = fs.readdirSync('./modules');
 
-client.on('ready', () => {
+const express = require('express');
+const app = express();
+const port = 5000;
+const rateLimit = require("express-rate-limit")
 
-});
+const limiter = rateLimit({
+  windowsMs: 1 * 60 * 1000,
+  max: 5,
+  message: "Too much requests, please try again later."
+})
+
+app.use(limiter);
+
+
+const getServersRouter = require('./api/get-servers');
+const getServerRouter = require('./api/get-server');
+const updateServerPrefixRouter = require('./api/update-server-prefix');
+const getBlacklistRouter = require('./api/get-blacklist');
+const addBlacklistRouter = require('./api/add-blacklist');
+
+// Mount the server routes
+app.use('/api', getServersRouter);
+app.use('/api', getServerRouter);
+app.use('/api', updateServerPrefixRouter);
+app.use('/api', getBlacklistRouter);
+app.use('/api', addBlacklistRouter);
+
+// Middleware to parse JSON requests
+app.use(express.json());
+
+// Import the ServerSettingsSchema
+const ServerSettings = require('./Schemas/SettingsSchema');
+
+app.get('/', (req, res) => {
+  res.send(`Ready`)
+})
 
 client.on('messageCreate', async (message) => {
   const serverId = message.guildID;
@@ -46,4 +79,9 @@ client.on('messageCreate', async (message) => {
   client.handleCommands(commandFolders);
 
   await client.connect(config.token);
+
+  app.listen(port, () => {
+    console.log('\x1b[32m[PORT]\x1b[0m:', port);
+  });
+  
 })();
