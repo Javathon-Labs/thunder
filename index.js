@@ -14,13 +14,6 @@ const app = express();
 const port = 5000;
 const rateLimit = require("express-rate-limit")
 
-const limiter = rateLimit({
-  windowsMs: 1 * 60 * 1000,
-  max: 5,
-  message: "Too much requests, please try again later."
-})
-
-app.use(limiter);
 
 
 const getServersRouter = require('./api/get-servers');
