@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   name: 'help',
   description: 'Shows all available commands.',
-  usage: '.help',
+  usage: '$help',
   async execute(message, args, client) {
     const commandsPath = path.join(__dirname, '..');
     const commandFolders = fs.readdirSync(commandsPath);

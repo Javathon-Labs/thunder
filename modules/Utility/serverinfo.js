@@ -4,7 +4,6 @@ module.exports = {
     usage: ``,
     async execute(message, args, client) {
         const guild = client.guilds.get(message.guildID)
-        console.log(guild)
         const embed = {
             title: `${guild.name}`,
             description: guild.description || "This server has no description",

@@ -46,6 +46,11 @@ app.get('/', (req, res) => {
   res.send(`Ready`)
 })
 
+client.updateUserStatus('409oqQWd', {
+  content: 'Zap | prefix is $',
+  emoteId: 90002563
+});
+
 client.on('messageCreate', async (message) => {
   const serverId = message.guildID;
   const content = message.content.toLowerCase();
