@@ -12,9 +12,6 @@ module.exports = {
                 throw new Error('Missing Permissions: To use this command, you need the `Manage Server` permission!');
             }
 
-            // Debug log
-            console.log('Full message content:', message.content);
-            console.log('Args:', args);
 
             // Remove the command itself from args if it's present
             if (args[0].toLowerCase() === '$blacklist') {

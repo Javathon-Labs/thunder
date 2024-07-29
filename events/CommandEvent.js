@@ -59,10 +59,10 @@ module.exports = {
 
             await client.commands.get(commandName).execute(message, args, client);
         } catch (error) {
-            console.error(error);
+            p.error(error);
             const errorEmbed = {
                 title: "Unexpected Error!",
-                description: `An unexpected error occurred while processing your command. \n\n\`\`\`${error}\`\`\``,
+                description: `An unexpected error occurred while processing your command. \n\`\`\`${error}\`\`\``,
                 color: 0xFF3131,
                 footer: {
                     text: "Please try again later or contact the developer."
