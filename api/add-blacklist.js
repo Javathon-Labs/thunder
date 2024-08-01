@@ -2,24 +2,27 @@ const BadWord = require('../Schemas/BadWordSchema');
 const express = require("express");
 const router = express.Router();
 
-
-router.post('/servers/:serverid/blacklist/add/:word', async (req, res) => {
+router.post('/servers/:serverid/blacklist/add', async (req, res) => {
     try {
-      const { serverid, word } = req.params;
-  
-      const existingWord = await BadWord.findOne({ serverId: serverid, word: word });
-      if (existingWord) {
-        return res.status(400).json({ error: 'This word has already been blacklisted.' });
-      }
-  
-      const newBadWord = new BadWord({ serverId: serverId, word: word });
-      await newBadWord.save();
-  
-      return res.status(201).json({ message: `The word "${word}" has been added to the blacklist.` });
-    } catch (error) {
-      console.error('Error adding word to blacklist:', error);
-      return res.status(500).json({ error: 'An error occurred while adding the word to the blacklist.' });
-    }
-  });
+        const { serverid } = req.params;
+        const { words } = req.body;
 
-  module.exports = router;
+        console.log('Request params:', req.params);
+
+        // Check if the words are already in the blacklist
+        const existingWords = await BadWord.find({ serverId: serverid, word: { $in: words } });
+        const existingWordSet = new Set(existingWords.map(w => w.word));
+        const newWords = words.filter(w => !existingWordSet.has(w));
+
+        // Create new bad word documents and save them to the database
+        const newBadWords = newWords.map(word => new BadWord({ serverId: serverid, word }));
+        await BadWord.insertMany(newBadWords);
+
+        return res.status(201).json({ message: `The words "${newWords.join(', ')}" have been added to the blacklist.` });
+    } catch (error) {
+        console.error('Error adding words to blacklist:', error);
+        return res.status(500).json({ error: 'An error occurred while adding the words to the blacklist.' });
+    }
+});
+
+module.exports = router;
