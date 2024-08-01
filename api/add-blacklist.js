@@ -15,7 +15,7 @@ router.post('/servers/:serverid/blacklist/add/:word', async (req, res) => {
       const newBadWord = new BadWord({ serverId: serverId, word: word });
       await newBadWord.save();
   
-      return res.status(201).json({ message: `The word [${word}] has been added to the blacklist.` });
+      return res.status(201).json({ message: `The word "${word}" has been added to the blacklist.` });
     } catch (error) {
       console.error('Error adding word to blacklist:', error);
       return res.status(500).json({ error: 'An error occurred while adding the word to the blacklist.' });

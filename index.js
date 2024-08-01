@@ -21,6 +21,7 @@ const getServerRouter = require('./api/get-server');
 const updateServerPrefixRouter = require('./api/update-server-prefix');
 const getBlacklistRouter = require('./api/get-blacklist');
 const addBlacklistRouter = require('./api/add-blacklist');
+const removeBlacklistRouter = require("./api/remove-blacklist")
 
 // Mount the server routes
 app.use('/api', getServersRouter);
@@ -28,6 +29,8 @@ app.use('/api', getServerRouter);
 app.use('/api', updateServerPrefixRouter);
 app.use('/api', getBlacklistRouter);
 app.use('/api', addBlacklistRouter);
+app.use('/api', removeBlacklistRouter);
+
 
 // Middleware to parse JSON requests
 app.use(express.json());
