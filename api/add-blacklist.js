@@ -1,31 +1,32 @@
-const express = require("express");
 const BadWord = require('../Schemas/BadWordSchema');
+const express = require("express");
 const router = express.Router();
 
-router.post('/servers/:serverid/blacklist/add', async (req, res) => {
-  console.log('Headers:', req.headers);
-  console.log('Raw body:', req.body);
-  console.log('Word:', req.body.word);
-
-  const word = req.body.word;
-  if (!word) {
-    return res.status(400).json({ error: 'Word is required in the request body.' });
-  }
-
+// POST /api/servers/:serverid/blacklist/add/:word
+router.post('/servers/:serverid/blacklist/add/:word', async (req, res) => {
   try {
-    const { serverid } = req.params;
+    const { serverid, word } = req.params;
 
-    const existingWord = await BadWord.findOne({ serverId: serverid, word: word });
-    if (existingWord) {
-      return res.status(400).json({ error: 'This word is already in the blacklist.' });
+    if (!word) {
+      return res.status(400).json({ error: 'Word is required.' });
     }
 
-    const newWord = new BadWord({ serverId: serverid, word: word });
-    await newWord.save();
+    // Check if the word already exists in the blacklist
+    const existingWord = await BadWord.findOne({ serverId: serverid, word: word });
+    if (existingWord) {
+      return res.status(409).json({ error: 'This word is already in the blacklist.' });
+    }
 
-    console.log(`The word "${word}" has been added to the blacklist for server ${serverid}.`);
+    // Create a new BadWord document
+    const newBadWord = new BadWord({
+      serverId: serverid,
+      word: word
+    });
 
-    return res.status(201).json({ message: `The word "${word}" has been added to the blacklist.` });
+    // Save the new bad word to the database
+    await newBadWord.save();
+
+    return res.status(201).json({ message: 'Word added to the blacklist successfully.', word: word });
   } catch (error) {
     console.error('Error adding word to blacklist:', error);
     return res.status(500).json({ error: 'An error occurred while adding the word to the blacklist.' });
