@@ -14,6 +14,8 @@ const app = express();
 const port = 5000;
 const rateLimit = require("express-rate-limit")
 
+app.use(express.json());
+
 
 
 const getServersRouter = require('./api/get-servers');
@@ -32,8 +34,6 @@ app.use('/api', addBlacklistRouter);
 app.use('/api', removeBlacklistRouter);
 
 
-// Middleware to parse JSON requests
-app.use(express.json());
 
 // Import the ServerSettingsSchema
 const ServerSettings = require('./Schemas/SettingsSchema');
