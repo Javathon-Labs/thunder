@@ -1,12 +1,24 @@
-const BadWord = require('../Schemas/BadWordSchema');
 const express = require("express");
+const BadWord = require('../Schemas/BadWordSchema');
 const router = express.Router();
+
+// Ensure body parsing middleware is set up
+const app = express();
+app.use(express.json());
 
 // Endpoint to add a word to the blacklist and log it
 router.post('/servers/:serverid/blacklist/add', async (req, res) => {
+  // Log the request body for debugging
+  console.log('Request body:', req.body);
+
+  // Validate the request body
+  const word = req?.body?.word;
+  if (!word) {
+    return res.status(400).json({ error: 'Word is required in the request body.' });
+  }
+
   try {
     const { serverid } = req.params;
-    const { word } = req.body;
 
     // Check if the word already exists in the blacklist
     const existingWord = await BadWord.findOne({ serverId: serverid, word: word });
