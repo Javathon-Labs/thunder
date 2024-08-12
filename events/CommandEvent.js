@@ -17,7 +17,7 @@ module.exports = {
             if (!serverSettings) {
                 // Create a new server settings entry if it doesn't exist
                 serverSettings = new ServerSettings({
-                    serverId: message.serverId
+                    serverId: message.guildID
                 });
                 await serverSettings.save();
             }
@@ -68,7 +68,7 @@ module.exports = {
                     text: "Please try again later or contact the developer."
                 },
             };
-            await message.createMessage({ embeds: [errorEmbed], rep });
+            await message.createMessage({ embeds: [errorEmbed], replyMessageIds: [message.id], isPrivate: true });
         }
     }
 };
