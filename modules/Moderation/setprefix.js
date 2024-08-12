@@ -1,3 +1,4 @@
+const colors = require('../../config/config.json').colors;
 // commands/setprefix.js
 const ServerSettings = require('../../Schemas/SettingsSchema');
 
@@ -9,14 +10,33 @@ module.exports = {
     // Check if the user has the necessary permissions
     const permissionCheck = await message.member.getPermission();
     if (!permissionCheck.includes('ManageServer') && !message.member.isOwner) {
-      throw new Error('Missing Permissions: To use this command, you need the "Manage Server" permission!');
-    }
+      const embed = {
+        title: 'Missing Permissions!',
+        description: 'To use this command, you need the `Manage Server` permission!',
+        color: colors.red,
+        footer: {
+            text: 'Please try again later.'
+        }
+    };
+    return message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
+}
 
     // Get the new prefix from the command arguments
     const newPrefix = args[1]; // Access the second argument
     if (!newPrefix) {
-      throw new Error('Please provide a new prefix. Usage: "$setprefix (prefix)"');
-    }
+      const embed = {
+        title: 'Missing Arguments!',
+        description: "**You are missing arguments!**",
+        fields: [
+            {
+                name: 'Error',
+                value: 'a `prefix` is a required argument that was missing.',
+            },
+        ],
+        color: colors.red,
+    };
+    return message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
+}
 
     try {
       // Update the server settings in the database
@@ -30,7 +50,7 @@ module.exports = {
       const embed = {
         title: 'Success!',
         description: `The server prefix has been updated to \`${serverSettings.prefix}\``,
-        color: 0x39FF14,
+        color: colors.green,
       };
       await message.createMessage({ embeds: [embed] });
     } catch (error) {

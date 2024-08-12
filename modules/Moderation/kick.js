@@ -1,3 +1,5 @@
+const colors = require('../../config/config.json').colors;
+
 module.exports = {
     name: 'kick',
     description: 'kick a user from the server.',
@@ -6,14 +8,34 @@ module.exports = {
         // Check if the user has the necessary permissions
         const permissionCheck = await message.member.getPermission();
         if (!permissionCheck.includes('CanKickMembers') && !message.member.isOwner) {
-            throw new Error('Missing Permissions: To use this command, you need the "Kick/Ban Members" permission!');
-        }
+            const embed = {
+                title: 'Missing Permissions!',
+                description: 'To use this command, you need the `Kick/Ban Members` permission!',
+                color: colors.red,
+                footer: {
+                  text: `Please try again later.`
+              }
+              };
+              await message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
+              return;
+            }
 
         // Get the user to be kicked
-        const user = message?.mentions?.users[0]?.id;
+        const user = message.mentions?.users[0].id;
         if (!user) {
-            throw new Error('To execute this command, a user must be mentioned. Usage: "$kick @username"');
-        }
+            const embed = {
+              title: 'Missing Arguments!',
+              description: "**You are missing arguments!**",
+              fields: [
+                  {
+                      name: 'Error',
+                      value: 'a `userID` is a required argument that was missing. \n\nDont know how to get a userID? You can follow the tutorial [here](https://support.guilded.gg/hc/en-us/articles/6183962129303-Developer-mode).',
+                  },
+              ],
+              color: colors.red,
+          };
+          return message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
+      }
 
         try {
             // Kick the user
@@ -25,7 +47,7 @@ module.exports = {
                 "description": `<@${user}> has been kicked!`,
                 "color": 0x39FF14,
             }
-            await message.createMessage({ embeds: [embed] });
+            await message.createMessage({ embeds: [embed], isSilent: true });
         } catch (error) {
             console.error(error);
             throw new Error(`Failed to kick user: ${error.message}`);

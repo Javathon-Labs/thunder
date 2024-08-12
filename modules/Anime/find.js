@@ -1,3 +1,4 @@
+const colors = require('../../config/config.json').colors;
 const { anime_api_url } = require('../../config/config.json');
 
 module.exports = {
@@ -21,7 +22,7 @@ module.exports = {
           text: "Please try again.",
       }
       };
-      await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
+      await message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
       return;
     }
 
@@ -46,7 +47,7 @@ module.exports = {
             "text": "Please try again."
         },
         };
-        await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
+        await message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isSilent: true });
         return;
       }
 
@@ -88,15 +89,10 @@ module.exports = {
       };
 
       // Send the embed to the channel
-      await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
+      await message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isSilent: true });
     } catch (error) {
       console.error(error);
-      const embed = {
-        title: 'Error!',
-        description: `An error occurred while executing this command. /n/n \`${error}\``,
-        color: 0xFF3131,
-      };
-      await message.createMessage({ embeds: [embed] });
+      throw new Error(error.message)
     }
   },
 };

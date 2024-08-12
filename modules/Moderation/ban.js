@@ -1,3 +1,5 @@
+const colors = require('../../config/config.json').colors;
+
 module.exports = {
   name: 'ban',
   description: 'Ban a user from the server.',
@@ -6,29 +8,54 @@ module.exports = {
     // Check if the user has the necessary permissions
     const permissionCheck = await message.member.getPermission();
     if (!permissionCheck.includes('CanKickMembers') && !message.member.isOwner) {
-      throw new Error('Missing Permissions: To use this command, you need the "Kick/Ban Members" permission!');
+      const embed = {
+        title: 'Missing Permissions!',
+        description: 'To use this command, you need the `Kick/Ban Members` permission!',
+        color: colors.red,
+        footer: {
+          text: `Please try again later.`
+      }
+      };
+      await message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
+      return;
     }
 
     // Get the user to be banned
-    const user = message?.mentions?.users[0]?.id;
+    const user = message.mentions?.users[0].id;
     if (!user) {
-      throw new Error('To execute this command, a user must be mentioned. Usage: "$ban @username"');
-    }
+      const embed = {
+        title: 'Missing Arguments!',
+        description: "**You are missing arguments!**",
+        fields: [
+            {
+                name: 'Error',
+                value: 'a `userID` is a required argument that was missing. \n\nDont know how to get a userID? You can follow the tutorial [here](https://support.guilded.gg/hc/en-us/articles/6183962129303-Developer-mode).',
+            },
+        ],
+        color: colors.red,
+    };
+    return message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
+}
 
     try {
       // Ban the user
-      await message.guild.createBan(message.guildID, user);
+      await client.createBan(message.guildID, user);
 
       // Send a success message to the channel
       const embed = {
         title: `Success!`,
-        description: `<@${user}> has been banned! `,
+        description: `<@${user}> has been banned!`,
         color: 0x39ff14,
       };
-      await message.createMessage({ embeds: [embed] });
+      await message.createMessage({ embeds: [embed], isSilent: true });
     } catch (error) {
       console.error(error);
-      throw new Error(`Failed to ban user: ${error.message}`);
+      const embed = {
+        title: 'Error',
+        description: `Failed to ban user: ${error.message}`,
+        color: 0xff0000,
+      };
+      await message.createMessage({ embeds: [embed], isSilent: true });
     }
   }
-};
+}

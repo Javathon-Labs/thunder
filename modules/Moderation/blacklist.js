@@ -1,4 +1,5 @@
 const BadWord = require('../../Schemas/BadWordSchema');
+const colors = require('../../config/config.json').colors;
 
 module.exports = {
     name: 'blacklist',
@@ -9,9 +10,17 @@ module.exports = {
             // Check permissions
             const permissionCheck = await message.member.getPermission();
             if (!permissionCheck.includes('CanUpdateServer') && !message.member.isOwner) {
-                throw new Error('Missing Permissions: To use this command, you need the `Manage Server` permission!');
+                const embed = {
+                    title: 'Missing Permissions!',
+                    description: 'To use this command, you need the `Update Server` permission!',
+                    color: colors.red,
+                    footer: {
+                        text: 'Please try again later.'
+                    }
+                };
+                await message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
+                return;
             }
-
 
             // Remove the command itself from args if it's present
             if (args[0].toLowerCase() === '$blacklist') {
@@ -20,7 +29,22 @@ module.exports = {
 
             // Check for valid usage
             if (args.length < 1) {
-                throw new Error('Invalid usage. Please use "$blacklist <add/remove/view> [word]"');
+                const embed = {
+                    title: 'Invalid Usage!',
+                    description: 'It seems you aren\'t using this command right. Please follow the example below for a headstart!',
+                    fields: [
+                        {
+                            name: 'Usage',
+                            value: '```$blacklist <add | view | remove>```'
+                        }
+                    ],
+                    color: colors.red,
+                    footer: {
+                        text: 'Please try again later.'
+                    }
+                };
+                await message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
+                return;
             }
 
             const action = args[0].toLowerCase();
@@ -35,24 +59,57 @@ module.exports = {
                 case 'view':
                     return viewWords(message, serverId);
                 default:
-                    throw new Error('Invalid action. Please use "add, remove, or view."');
+                    const embed = {
+                        title: 'Missing Arguments!',
+                        description: '**You are missing arguments!**',
+                        fields: [
+                            {
+                                name: 'Error',
+                                value: 'An `action` is a required argument that was missing. \n\nDon\'t know which action to use? It\'s either `add`, `remove`, or `view`.'
+                            }
+                        ],
+                        color: colors.red
+                    };
+                    return message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
             }
         } catch (error) {
-            console.error('Error in blacklist command:', error);
-            throw new Error(`An error occurred: ${error.message}`);
+            console.error(error);
+            throw new Error(`${error.message}`);
         }
-    },
+    }
 };
 
 async function addWord(message, word, serverId) {
     if (!word) {
-        throw new Error('Please provide a word to blacklist.');
+        const embed = {
+            title: 'Missing Arguments!',
+            description: '**You are missing arguments!**',
+            fields: [
+                {
+                    name: 'Error',
+                    value: 'A `word` is a required argument that was missing.'
+                }
+            ],
+            color: colors.red
+        };
+        return message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
     }
 
     try {
         const existingWord = await BadWord.findOne({ serverId, word });
         if (existingWord) {
-            throw new Error('This word has already been blacklisted.');
+            const embed = {
+                title: 'Error!',
+                description: '**An error occurred while blacklisting your word!**',
+                fields: [
+                    {
+                        name: 'Error',
+                        value: 'This word is already blacklisted.'
+                    }
+                ],
+                color: colors.red
+            };
+            return message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
         }
 
         const newBadWord = new BadWord({ serverId, word });
@@ -60,37 +117,59 @@ async function addWord(message, word, serverId) {
 
         const embed = {
             title: 'Success!',
-            description: `The word "${word}" has been blacklisted in this server.`,
-            color: 0x39ff14,
+            description: `\`${word}\` has been blacklisted in this server.`,
+            color: colors.red,
         };
         await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
     } catch (error) {
-        console.error('Error adding word:', error);
-        throw new Error(`An error occurred while adding the word: ${error.message}`);
+        console.error(error);
+        throw new Error(`${error.message}`);
     }
 }
 
 async function removeWord(message, word, serverId) {
     if (!word) {
-        throw new Error('Please provide a word to remove from the blacklist.');
+        const embed = {
+            title: 'Missing Arguments!',
+            description: '**You are missing arguments!**',
+            fields: [
+                {
+                    name: 'Error',
+                    value: 'A `word` is a required argument that was missing.'
+                }
+            ],
+            color: colors.red
+        };
+        return message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
     }
 
     try {
         const result = await BadWord.findOneAndDelete({ serverId, word });
 
         if (!result) {
-            throw new Error('This word is not blacklisted.');
+            const embed = {
+                title: 'Error!',
+                description: '**An error occurred while removing your word!**',
+                fields: [
+                    {
+                        name: 'Error',
+                        value: 'This word is not blacklisted.'
+                    }
+                ],
+                color: colors.red
+            };
+            return message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
         }
 
         const embed = {
             title: 'Done!',
-            description: `The word "${word}" has been removed from the blacklist.`,
-            color: 0x39ff14,
+            description: `\`${word}\` has been removed from the blacklist.`,
+            color: 0x39ff14
         };
         await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
     } catch (error) {
-        console.error('Error removing word:', error);
-        throw new Error(`An error occurred while removing the word: ${error.message}`);
+        console.error(error);
+        throw new Error(`${error.message}`);
     }
 }
 
@@ -99,7 +178,18 @@ async function viewWords(message, serverId) {
         const badWords = await BadWord.find({ serverId });
 
         if (badWords.length === 0) {
-            throw new Error('There are no blacklisted words for this server.');
+            const embed = {
+                title: 'Error!',
+                description: '**An error occurred while viewing your words!**',
+                fields: [
+                    {
+                        name: 'Error',
+                        value: 'There are no words blacklisted in the server.'
+                    }
+                ],
+                color: colors.red
+            };
+            return message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isPrivate: true });
         }
 
         const wordList = badWords.map((bw, index) => `${index + 1}. \`${bw.word}\``).join('\n');
@@ -107,11 +197,11 @@ async function viewWords(message, serverId) {
         const embed = {
             title: 'Blacklisted Words ⬇',
             description: wordList,
-            color: 0x0000FF,
+            color: 0x0000FF
         };
         await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
     } catch (error) {
-        console.error('Error fetching blacklisted words:', error);
-        throw new Error(`An error occurred while fetching the blacklisted words: ${error.message}`);
+        console.error(error);
+        throw new Error(`${error.message}`);
     }
 }
