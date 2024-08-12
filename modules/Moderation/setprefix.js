@@ -52,7 +52,7 @@ module.exports = {
         description: `The server prefix has been updated to \`${serverSettings.prefix}\``,
         color: colors.green,
       };
-      await message.createMessage({ embeds: [embed] });
+      await message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isSilent: true });
     } catch (error) {
       console.error(error);
       throw new Error(`Failed to update server prefix: ${error.message}`);

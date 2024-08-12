@@ -166,7 +166,7 @@ async function removeWord(message, word, serverId) {
             description: `\`${word}\` has been removed from the blacklist.`,
             color: 0x39ff14
         };
-        await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
+        await message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isSilent: true });
     } catch (error) {
         console.error(error);
         throw new Error(`${error.message}`);
@@ -199,7 +199,7 @@ async function viewWords(message, serverId) {
             description: wordList,
             color: 0x0000FF
         };
-        await message.createMessage({ embeds: [embed], replyMessageIds: [message.id] });
+        await message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isSilent: true });
     } catch (error) {
         console.error(error);
         throw new Error(`${error.message}`);

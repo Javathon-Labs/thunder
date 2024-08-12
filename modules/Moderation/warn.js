@@ -23,7 +23,7 @@ module.exports = {
 
         try {
             // Check if a user is mentioned
-            const targetUser = message?.mentions?.users[0];
+            const targetUser = message.mentions?.users[0];
             if (!targetUser) {
                 const embed = {
                     title: 'Missing Arguments!',

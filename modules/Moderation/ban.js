@@ -47,7 +47,7 @@ module.exports = {
         description: `<@${user}> has been banned!`,
         color: 0x39ff14,
       };
-      await message.createMessage({ embeds: [embed], isSilent: true });
+      await message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isSilent: true });
     } catch (error) {
       console.error(error);
       const embed = {

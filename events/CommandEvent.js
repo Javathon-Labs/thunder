@@ -68,7 +68,7 @@ module.exports = {
                     text: "Please try again later or contact the developer."
                 },
             };
-            await message.createMessage({ embeds: [errorEmbed] });
+            await message.createMessage({ embeds: [errorEmbed], rep });
         }
     }
 };

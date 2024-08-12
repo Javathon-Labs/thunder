@@ -65,7 +65,7 @@ module.exports = {
                     description: `Deleted ${warnings.length} warning(s) for <@${targetId}>.`,
                     color: 0x39ff14
                 };
-                await message.createMessage({ embeds: [deletedEmbed], isSilent: true });
+                await message.createMessage({ embeds: [deletedEmbed], replyMessageIds: [message.id], isSilent: true });
             } else {
                 const embed = {
                     title: 'Error!',

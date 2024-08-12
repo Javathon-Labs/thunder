@@ -47,7 +47,7 @@ module.exports = {
                 "description": `<@${user}> has been kicked!`,
                 "color": 0x39FF14,
             }
-            await message.createMessage({ embeds: [embed], isSilent: true });
+            await message.createMessage({ embeds: [embed], replyMessageIds: [message.id], isSilent: true });
         } catch (error) {
             console.error(error);
             throw new Error(`Failed to kick user: ${error.message}`);
