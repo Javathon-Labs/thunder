@@ -1,7 +1,7 @@
 {
     "token": "gapi_xVxUUMYOJBPXGJ8D2UhD2pPPmNy9138bN5gPIUwAt6TWKeRl7qBB4KWsnv669XfaFA44u8VV5OkC4L0slj3H3w==",
     "anime_api_url": "https://api.jikan.moe/v4",
-    "mongoURI": "mongodb+srv://weebjs:fuckinghateumaru@cluster0.ikzk44n.mongodb.net/?retryWrites=true&w=majority",
+    "mongoURI": "mongodb+srv://weebjs:fuckinghateumaru_@cluster0.ikzk44n.mongodb.net/?retryWrites=true&w=majority",
     "prefix": "$",
     "colors": {
         "red": "0xFF3131",
